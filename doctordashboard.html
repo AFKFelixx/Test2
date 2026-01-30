@@ -28,6 +28,8 @@
             --border-radius-sm: 8px;
             --transition: all 0.3s ease;
             --header-height: 80px;
+            --sidebar-width: 250px;
+            --sidebar-collapsed: 70px;
         }
 
         * {
@@ -42,6 +44,7 @@
             color: var(--text-dark);
             background-color: var(--off-white);
             min-height: 100vh;
+            transition: var(--transition);
         }
 
         h1, h2, h3, h4 {
@@ -56,15 +59,15 @@
             color: white;
             padding: 15px 5%;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
-        }
-
-        .doctor-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: var(--header-height);
         }
 
         .doctor-nav-left {
@@ -152,62 +155,163 @@
             transform: translateY(-2px);
         }
 
-        /* Sticky Navigation */
-        .sticky-nav {
-            background: white;
-            border-bottom: 2px solid var(--light-gray);
-            position: sticky;
-            top: 70px;
-            z-index: 999;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .sticky-nav-container {
-            padding: 0 5%;
-        }
-
-        .sticky-nav-links {
-            display: flex;
-            gap: 5px;
-            overflow-x: auto;
-            padding: 15px 0;
-        }
-
-        .sticky-nav-link {
-            padding: 12px 25px;
+        /* Hamburger Menu Button */
+        .menu-toggle {
             background: none;
             border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-light);
+            color: white;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: var(--transition);
-            border-radius: 50px;
-            white-space: nowrap;
-            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            transition: var(--transition);
         }
 
-        .sticky-nav-link:hover {
-            color: var(--primary-blue);
-            background-color: var(--soft-blue);
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .sticky-nav-link.active {
+        /* Slider Menu */
+        .slider-menu {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .slider-menu.active {
+            transform: translateX(0);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-header {
+            padding: 25px 20px;
             background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
             color: white;
-            box-shadow: 0 4px 15px rgba(58, 134, 255, 0.2);
+            text-align: center;
         }
 
-        /* Doctor Container */
-        .doctor-container {
+        .menu-user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            border: 3px solid white;
+            overflow: hidden;
+        }
+
+        .menu-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .menu-user-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .menu-user-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .menu-nav-links {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .menu-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .menu-nav-link:hover {
+            background: var(--soft-blue);
+            color: var(--primary-blue);
+            border-left-color: var(--primary-blue);
+        }
+
+        .menu-nav-link.active {
+            background: var(--soft-blue);
+            color: var(--primary-blue);
+            border-left-color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .menu-nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .menu-footer {
+            padding: 20px;
+            border-top: 1px solid var(--light-gray);
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: var(--header-height);
             padding: 30px 5%;
+            transition: var(--transition);
             max-width: 1600px;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
         }
 
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* Dashboard Section */
         .dashboard-section {
             background: white;
             border-radius: var(--border-radius);
@@ -970,21 +1074,35 @@
 
         /* Print Styles */
         @media print {
-            .sticky-nav, .doctor-header, .filter-section, .export-buttons, .action-buttons, .no-print {
+            .slider-menu, .doctor-header, .menu-toggle, .filter-section, .export-buttons, .action-buttons, .no-print {
                 display: none !important;
             }
            
             body {
                 background: white;
+                margin: 0;
+                padding: 0;
             }
            
             .dashboard-section {
                 box-shadow: none;
                 border: 1px solid #ddd;
+                margin: 0;
+            }
+
+            .main-content {
+                margin: 0;
+                padding: 20px;
             }
         }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content {
+                padding: 25px 3%;
+            }
+        }
+
         @media (max-width: 1024px) {
             .dashboard-stats {
                 grid-template-columns: repeat(2, 1fr);
@@ -1011,19 +1129,35 @@
         }
 
         @media (max-width: 768px) {
-            .doctor-nav {
-                flex-direction: column;
-                gap: 15px;
+            .doctor-header {
+                padding: 15px 3%;
             }
 
-            .doctor-nav-left, .doctor-nav-right {
-                width: 100%;
-                justify-content: center;
+            .doctor-logo-text {
+                font-size: 1.2rem;
             }
 
-            .sticky-nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
+            .doctor-user-info {
+                padding: 6px 12px;
+            }
+
+            .doctor-user-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .logout-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+
+            .slider-menu {
+                width: 280px;
+            }
+
+            .main-content {
+                padding: 20px 3%;
             }
 
             .dashboard-stats {
@@ -1084,6 +1218,29 @@
                 flex-direction: column;
                 gap: 5px;
             }
+
+            .attendance-card h3,
+            .profile-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .dashboard-section {
+                padding: 25px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+            }
+
+            .stat-content h3 {
+                font-size: 1.8rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1092,7 +1249,7 @@
             }
 
             .dashboard-section {
-                padding: 25px;
+                padding: 20px;
             }
 
             .modal-body {
@@ -1103,13 +1260,13 @@
                 flex-direction: column;
             }
 
-            .sticky-nav-link {
-                padding: 10px 15px;
-                font-size: 0.9rem;
+            .menu-nav-link {
+                padding: 15px 20px;
+                font-size: 0.95rem;
             }
 
             .stat-card {
-                padding: 20px;
+                padding: 15px;
             }
 
             .stat-icon {
@@ -1119,7 +1276,7 @@
             }
 
             .stat-content h3 {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
 
             .time-display {
@@ -1129,6 +1286,18 @@
             .profile-avatar {
                 width: 120px;
                 height: 120px;
+            }
+
+            .doctor-logo-text {
+                font-size: 1rem;
+            }
+
+            .logout-btn span {
+                display: none;
+            }
+
+            .logout-btn i {
+                margin: 0;
             }
         }
 
@@ -1154,54 +1323,76 @@
 <body>
     <!-- Doctor Header -->
     <header class="doctor-header">
-        <nav class="doctor-nav">
-            <div class="doctor-nav-left">
-                <a href="index.html" class="doctor-logo">
-                    <div class="doctor-logo-icon">
-                        <img id="doctorSchoolLogo" src="" alt="School Logo"
-                             style="width: 100%; height: 100%; object-fit: contain; display: none;">
-                        <i class="fas fa-hospital-alt" id="doctorLogoIcon"></i>
-                    </div>
-                    <div class="doctor-logo-text" id="doctorSchoolName">Northwood Clinic</div>
-                </a>
-            </div>
-            <div class="doctor-nav-right">
-                <div class="doctor-user-info" id="doctorUserInfo">
-                    <!-- Will be populated by JavaScript -->
+        <div class="doctor-nav-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="index.html" class="doctor-logo">
+                <div class="doctor-logo-icon">
+                    <img id="doctorSchoolLogo" src="" alt="School Logo"
+                         style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                    <i class="fas fa-hospital-alt" id="doctorLogoIcon"></i>
                 </div>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </button>
+                <div class="doctor-logo-text" id="doctorSchoolName">Northwood Clinic</div>
+            </a>
+        </div>
+        <div class="doctor-nav-right">
+            <div class="doctor-user-info" id="doctorUserInfo">
+                <!-- Will be populated by JavaScript -->
             </div>
-        </nav>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
     </header>
 
-    <!-- Sticky Navigation -->
-    <nav class="sticky-nav">
-        <div class="sticky-nav-container">
-            <div class="sticky-nav-links">
-                <button class="sticky-nav-link active" data-section="dashboard-overview">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard Overview
-                </button>
-                <button class="sticky-nav-link" data-section="appointments">
-                    <i class="fas fa-calendar-check"></i> Appointments
-                </button>
-                <button class="sticky-nav-link" data-section="medical-reports">
-                    <i class="fas fa-file-medical"></i> Medical Reports
-                </button>
-                <button class="sticky-nav-link" data-section="attendance">
-                    <i class="fas fa-clock"></i> Attendance
-                </button>
-                <button class="sticky-nav-link" data-section="profile">
-                    <i class="fas fa-user-md"></i> Profile
-                </button>
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Slider Menu -->
+    <aside class="slider-menu" id="sliderMenu">
+        <div class="menu-header">
+            <div class="menu-user-avatar" id="menuUserAvatar">
+                <!-- Avatar will be populated by JavaScript -->
+            </div>
+            <div class="menu-user-info">
+                <h3 id="menuUserName">Dr. John Doe</h3>
+                <p id="menuUserRole">Medical Doctor</p>
             </div>
         </div>
-    </nav>
+        
+        <div class="menu-nav-links">
+            <a href="#" class="menu-nav-link active" data-section="dashboard-overview">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard Overview</span>
+            </a>
+            <a href="#" class="menu-nav-link" data-section="appointments">
+                <i class="fas fa-calendar-check"></i>
+                <span>Appointments</span>
+            </a>
+            <a href="#" class="menu-nav-link" data-section="medical-reports">
+                <i class="fas fa-file-medical"></i>
+                <span>Medical Reports</span>
+            </a>
+            <a href="#" class="menu-nav-link" data-section="attendance">
+                <i class="fas fa-clock"></i>
+                <span>Attendance</span>
+            </a>
+            <a href="#" class="menu-nav-link" data-section="profile">
+                <i class="fas fa-user-md"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+        
+        <div class="menu-footer">
+            <p>&copy; 2026 Northwood Clinic</p>
+            <p>Doctor Dashboard v2.0</p>
+        </div>
+    </aside>
 
-    <!-- Doctor Dashboard Content -->
-    <div class="doctor-container">
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
         <!-- Dashboard Overview Section (Active by default) -->
         <section class="dashboard-section active" id="dashboard-overview">
             <div class="section-header">
@@ -1500,7 +1691,7 @@
         <section class="dashboard-section" id="attendance">
             <div class="section-header">
                 <h2><i class="fas fa-clock"></i> Attendance Management</h2>
-                <button class="btn btn-primary" onclick="printAttendanceReport()" class="no-print">
+                <button class="btn btn-primary no-print" onclick="printAttendanceReport()">
                     <i class="fas fa-print"></i> Print Report
                 </button>
             </div>
@@ -1761,7 +1952,7 @@
                 </div>
             </div>
         </section>
-    </div>
+    </main>
 
     <!-- Medical Report Modal -->
     <div class="modal-overlay" id="medicalReportModal">
@@ -1918,6 +2109,9 @@
             const schoolName = document.getElementById('doctorSchoolName');
             const welcomeDoctorName = document.getElementById('welcomeDoctorName');
             const welcomeAvatar = document.getElementById('welcomeAvatar');
+            const menuUserName = document.getElementById('menuUserName');
+            const menuUserRole = document.getElementById('menuUserRole');
+            const menuUserAvatar = document.getElementById('menuUserAvatar');
            
             // Set school name from localStorage if available
             const schoolSettings = JSON.parse(localStorage.getItem('northwoodSchoolSettings'));
@@ -1940,24 +2134,37 @@
             }
            
             // Set welcome message
-            welcomeDoctorName.textContent = `Welcome, Dr. ${user.firstName} ${user.lastName}`;
+            const doctorName = `Dr. ${user.firstName} ${user.lastName}`;
+            welcomeDoctorName.textContent = `Welcome, ${doctorName}`;
             welcomeAvatar.textContent = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
+            menuUserName.textContent = doctorName;
+            menuUserRole.textContent = user.specialization || 'Medical Doctor';
            
             // Display user info with avatar
             const avatar = localStorage.getItem(`doctor_avatar_${user.id}`) || '';
+            const initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
+           
+            // Header avatar
             const avatarHtml = avatar ?
                 `<img src="${avatar}" alt="${user.firstName} ${user.lastName}">` :
-                `<div>${user.firstName.charAt(0)}${user.lastName.charAt(0)}</div>`;
+                `<div>${initials}</div>`;
            
             doctorUserInfo.innerHTML = `
                 <div class="doctor-user-avatar">
                     ${avatarHtml}
                 </div>
                 <div>
-                    <div style="font-weight: 600;">Dr. ${user.firstName} ${user.lastName}</div>
+                    <div style="font-weight: 600;">${doctorName}</div>
                     <div style="font-size: 0.85rem; opacity: 0.9;">${user.specialization || 'Medical Doctor'}</div>
                 </div>
             `;
+           
+            // Menu avatar
+            const menuAvatarHtml = avatar ?
+                `<img src="${avatar}" alt="${user.firstName} ${user.lastName}">` :
+                `<div>${initials}</div>`;
+           
+            menuUserAvatar.innerHTML = menuAvatarHtml;
         }
 
         // Listen for storage events to update logo if changed in admin dashboard
@@ -2011,15 +2218,36 @@
             }
         }
 
-        // ========== STICKY NAVIGATION ==========
+        // ========== SLIDER MENU FUNCTIONALITY ==========
        
-        const stickyNavLinks = document.querySelectorAll('.sticky-nav-link');
+        const menuToggle = document.getElementById('menuToggle');
+        const sliderMenu = document.getElementById('sliderMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const mainContent = document.getElementById('mainContent');
+        const menuNavLinks = document.querySelectorAll('.menu-nav-link');
         const dashboardSections = document.querySelectorAll('.dashboard-section');
-       
-        stickyNavLinks.forEach(link => {
-            link.addEventListener('click', function() {
+
+        // Toggle menu
+        menuToggle.addEventListener('click', function() {
+            sliderMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            document.body.style.overflow = sliderMenu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        // Close menu when clicking overlay
+        menuOverlay.addEventListener('click', function() {
+            sliderMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // Close menu when clicking a nav link
+        menuNavLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+               
                 // Remove active class from all links and sections
-                stickyNavLinks.forEach(l => l.classList.remove('active'));
+                menuNavLinks.forEach(l => l.classList.remove('active'));
                 dashboardSections.forEach(s => s.classList.remove('active'));
                
                 // Add active class to clicked link
@@ -2028,6 +2256,13 @@
                 // Show corresponding section
                 const sectionId = this.getAttribute('data-section');
                 document.getElementById(sectionId).classList.add('active');
+               
+                // Close menu on mobile
+                if (window.innerWidth <= 768) {
+                    sliderMenu.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
                
                 // Load data for the section if needed
                 switch(sectionId) {
@@ -2044,14 +2279,23 @@
             });
         });
 
+        // Close menu with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                sliderMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
         // Function to switch to specific section
         function switchToSection(sectionId) {
             // Remove active class from all links and sections
-            stickyNavLinks.forEach(l => l.classList.remove('active'));
+            menuNavLinks.forEach(l => l.classList.remove('active'));
             dashboardSections.forEach(s => s.classList.remove('active'));
            
             // Add active class to the target link
-            document.querySelector(`.sticky-nav-link[data-section="${sectionId}"]`).classList.add('active');
+            document.querySelector(`.menu-nav-link[data-section="${sectionId}"]`).classList.add('active');
            
             // Show corresponding section
             document.getElementById(sectionId).classList.add('active');
@@ -2913,7 +3157,7 @@
                 document.getElementById('avatarImage').style.display = 'block';
                 document.getElementById('avatarInitials').style.display = 'none';
                
-                // Update header avatar
+                // Update header and menu avatars
                 displayDoctorInfo(currentUser);
                
                 alert('Avatar updated successfully!');
